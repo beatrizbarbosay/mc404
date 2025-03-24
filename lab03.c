@@ -14,8 +14,7 @@ int read(int __fd, const void *__buf, int __n){
   return ret_val;
 }
 
-void write(int __fd, const void *__buf, int __n)
-{
+void write(int __fd, const void *__buf, int __n){
   __asm__ __volatile__(
     "mv a0, %0           # file descriptor\n"
     "mv a1, %1           # buffer \n"
@@ -28,8 +27,7 @@ void write(int __fd, const void *__buf, int __n)
   );
 }
 
-void exit(int code)
-{
+void exit(int code){
   __asm__ __volatile__(
     "mv a0, %0           # return code\n"
     "li a7, 93           # syscall exit (64) \n"
@@ -40,8 +38,7 @@ void exit(int code)
   );
 }
 
-void _start()
-{
+void _start(){
   int ret_code = main();
   exit(ret_code);
 }
@@ -49,11 +46,12 @@ void _start()
 #define STDIN_FD  0
 #define STDOUT_FD 1
 
-int main()
-{
+int main(){
   char str[33]; 
   int n = read(STDIN_FD, str, 33); //le a entrada de 32 bits
 
   write(STDOUT_FD, str, n); //printa n
   return 0;
 }
+
+//oiiii
