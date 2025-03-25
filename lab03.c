@@ -46,12 +46,34 @@ void _start(){
 #define STDIN_FD  0
 #define STDOUT_FD 1
 
-int main(){
-  char str[33]; 
-  int n = read(STDIN_FD, str, 33); //le a entrada de 32 bits
+int binarioParaDecimal(char binario[]) {
+    int decimal = 0;
 
-  write(STDOUT_FD, str, n); //printa n
-  return 0;
+    int negativo = (binario[0] == '1');
+    
+    for (int i = 0; i < 32; i++) {
+      decimal = decimal * 2 + (binario[i] - '0'); 
+    }
+    return decimal;
 }
 
-//oiiii
+
+int main(){
+  char entradabinaria[33]; 
+  int n = read(STDIN_FD, entradabinaria, 33); //indica quantos caracteres foram lidos
+  char decimal[33];
+  if(entradabinaria[0]=='1'){
+    decimal[0]='-';
+    int i;
+    for(i = 1; i < 33; i++){
+      decimal[i] = entradabinaria[i] - '0';
+    }
+  }else{
+    int i;
+    for(i = 0; i < 33; i++){
+      decimal[i] = entradabinaria[i] - '0';
+    }
+  }
+  write(STDOUT_FD, , decimal); //printa n
+  return 0;
+}

@@ -49,6 +49,8 @@ void _start()
 
 char buffer[6]; //tamanho da entrada
 
+
+
 int main(){
     read(STDIN_FD, (void*) buffer, 6); 
     int num1 = buffer[0] - '0'; //converte char para int
