@@ -14,7 +14,8 @@ int read(int __fd, const void *__buf, int __n){
   return ret_val;
 }
 
-void write(int __fd, const void *__buf, int __n){
+void write(int __fd, const void *__buf, int __n)
+{
   __asm__ __volatile__(
     "mv a0, %0           # file descriptor\n"
     "mv a1, %1           # buffer \n"
@@ -27,7 +28,8 @@ void write(int __fd, const void *__buf, int __n){
   );
 }
 
-void exit(int code){
+void exit(int code)
+{
   __asm__ __volatile__(
     "mv a0, %0           # return code\n"
     "li a7, 93           # syscall exit (64) \n"
@@ -38,42 +40,85 @@ void exit(int code){
   );
 }
 
-void _start(){
-  int ret_code = main();
+void _start() {
+  int ret_code;
+  asm volatile (
+    "call main\n"
+    "mv %0, a0\n"
+    : "=r"(ret_code)
+    :
+    : "a0"
+  );
   exit(ret_code);
 }
 
 #define STDIN_FD  0
 #define STDOUT_FD 1
 
-int binarioParaDecimal(char binario[]) {
-    int decimal = 0;
+int main();
 
-    int negativo = (binario[0] == '1');
-    
-    for (int i = 0; i < 32; i++) {
-      decimal = decimal * 2 + (binario[i] - '0'); 
-    }
-    return decimal;
+int binarioParaDecimal(const char binario[]) {
+  unsigned int decimal = 0;
+  for (int i = 0; i < 32; i++) { //converte cada bit para decimal
+    decimal = (decimal << 1) | (binario[i] - '0');//shifta o valor de decimal para a esquerda e adiciona o valor do bit
+  }
+  if (binario[0] == '1') { //se o número for negativo, inverte os bits e soma 1. obs: complemento 2
+    decimal = -(~decimal + 1);
+  }  
+  return (int)decimal;
 }
 
-
-int main(){
-  char entradabinaria[33]; 
-  int n = read(STDIN_FD, entradabinaria, 33); //indica quantos caracteres foram lidos
-  char decimal[33];
-  if(entradabinaria[0]=='1'){
-    decimal[0]='-';
-    int i;
-    for(i = 1; i < 33; i++){
-      decimal[i] = entradabinaria[i] - '0';
-    }
-  }else{
-    int i;
-    for(i = 0; i < 33; i++){
-      decimal[i] = entradabinaria[i] - '0';
-    }
+void intParaString(int num, char *str) { //para poder printar
+  int i = 0;
+  int negativo = 0;
+  
+  if (num < 0) { //trata negativos e retorna o absoluto
+    negativo = 1;
+    num = -num;
   }
-  write(STDOUT_FD, , decimal); //printa n
+  if (num == 0) { //se o numero for 0
+    str[i] = '0';
+    i++;
+  }
+  while (num > 0) { //retorna a string invertida
+    str[i] = (num % 10) + '0';
+    num /= 10;
+    i++;
+  }
+  if (negativo) { //se for negativo, adiciona o sinal
+    str[i] = '-';
+    i++;
+  }
+  str[i] = '\0';
+  for (int j = 0; j < i / 2; j++) { //inverte a string
+    char temp = str[j];
+    str[j] = str[i - j - 1];
+    str[i - j - 1] = temp;
+  }
+}
+
+int main() {
+  char entradabinaria[33];
+  int n = read(STDIN_FD, entradabinaria, 33);
+  
+  // Garante que a string está terminada corretamente
+  if (n > 0 && entradabinaria[n-1] == '\n') {
+    entradabinaria[n-1] = '\0';
+    n--;
+  } else {
+    entradabinaria[n] = '\0';
+  }
+  
+  int resultado = binarioParaDecimal(entradabinaria);
+  
+  char resultadoStr[12];
+  intParaString(resultado, resultadoStr);
+  
+  int len = 0;
+  while (resultadoStr[len] != '\0') len++; //calcula o tamanho da string
+  
+  write(STDOUT_FD, resultadoStr, len);
+  write(STDOUT_FD, "\n", 1);
+  
   return 0;
 }
