@@ -57,8 +57,7 @@ void _start() {
 
 int main();
 
-void intParaString(int num) { //para poder printar
-  char str[33];
+void intParaString(int num, char *str) { //para poder printar
   int i = 0;
   int negativo = 0;
   
@@ -81,11 +80,9 @@ void intParaString(int num) { //para poder printar
     str[i - j - 1] = temp;
   }
   str[i++] = '\n';
-  write(STDOUT_FD, str, i);
 }
 
-void unsignedIntParaString(unsigned int num) { //para lidar com numeros unsigned
-  char str[33];
+void unsignedIntParaString(unsigned int num, char *str) { //para lidar com numeros unsigned
   int i = 0;
   while (num > 0) {
     str[i++] = (num % 10) + '0';
@@ -97,7 +94,6 @@ void unsignedIntParaString(unsigned int num) { //para lidar com numeros unsigned
     str[i - j - 1] = temp;
   }
   str[i++] = '\n';
-  write(STDOUT_FD, str, i);
 }
 
 int binarioParaDecimal(const char binario[]) { //comando1
@@ -123,8 +119,7 @@ unsigned int binarioParaDecimalTrocado(const char binario[33]) { //comando 2 e 6
   return trocado;
 }
 
-void decimalparahexa(int num) {
-  char str[33];
+void decimalparahexa(int num, char *str) {
   unsigned int valor = (unsigned int) num;
   str[0] = '0';
   str[1] = 'x';
@@ -139,13 +134,11 @@ void decimalparahexa(int num) {
       encontrou = 1;
     }
   }
-  str[inicio++] = '\n';
-  write(STDOUT_FD, str, inicio);
+  str[inicio] = '\n';
 }
 
 
-void decimalparaoctal(int num) {
-  char str[33];
+void decimalparaoctal(int num, char *str) {
   unsigned int valor = (unsigned int) num;  
   str[0] = '0';
   str[1] = 'o';
@@ -158,12 +151,10 @@ void decimalparaoctal(int num) {
       encontrou = 1;
     }
   }
-  str[inicio++] = '\n';
-  write(STDOUT_FD, str, inicio);
+  str[inicio] = '\n';
 }
 
-void decimalparabitrocado(int num) {
-  char str[33];
+void decimalparabitrocado(int num, char *str) {
   unsigned int valor;
   if (num < 0) { //complemento de dois para números negativos
     valor = (unsigned int)(-num); 
@@ -189,12 +180,10 @@ void decimalparabitrocado(int num) {
       encontrado = 1;
     }
   }
-  str[inicio++] = '\n';
-  write(STDOUT_FD, str, inicio);
+  str[inicio] = '\n';
 }
 
-void decimalparahexatrocado(int num) {
-  char str[33];
+void decimalparahexatrocado(int num, char *str) {
   unsigned int valor;
   if (num < 0) { //complemento de dois para números negativos
     valor = (unsigned int)(-num); 
@@ -220,12 +209,10 @@ void decimalparahexatrocado(int num) {
       encontrado = 1;
     }
   }
-  str[inicio++] = '\n';
-  write(STDOUT_FD, str, inicio);
+  str[inicio] = '\n';
 }
 
-void decimalparaoctaltrocado(int num){
-  char str[33];
+void decimalparaoctaltrocado(int num, char *str){
   unsigned int valor;
   if (num < 0) {
     valor = (unsigned int)(-num);
@@ -247,25 +234,75 @@ void decimalparaoctaltrocado(int num){
       encontrou = 1;
     }
   }
-  str[inicio++] = '\n';
-  write(STDOUT_FD, str, inicio);
+  str[inicio] = '\n';
+
 }
 
 int main() {
   char entradabinaria[33];
   int n = read(STDIN_FD, entradabinaria, 33);
-
+  
+  
   int resultado = binarioParaDecimal(entradabinaria);
   unsigned int resultadoNaoAssinado = binarioParaDecimalTrocado(entradabinaria);
+
+  char hexa[33];
+  decimalparahexa(resultado, hexa);
+
+  char octal[33];
+  decimalparaoctal(resultado, octal);
+
+  char bitrocado[33];
+  decimalparabitrocado(resultado, bitrocado);
+
   unsigned int resultadotrocado= binarioParaDecimalTrocado(entradabinaria);
- 
-  intParaString(resultado);
-  unsignedIntParaString(resultadoNaoAssinado);
-  decimalparahexa(resultado);
-  decimalparaoctal(resultado);
-  decimalparabitrocado(resultado);
-  intParaString(resultadotrocado);
-  decimalparahexatrocado(resultado);
-  decimalparaoctaltrocado(resultado);
+
+  char hexatrocado[33];
+  decimalparahexatrocado(resultado, hexatrocado);
+
+  char octaltrocado[33];
+  decimalparaoctaltrocado(resultado, octaltrocado);
+
+  char resultadoStr[33];
+  intParaString(resultado, resultadoStr);
+  char resultadoStrNaoAssinado[33];
+  unsignedIntParaString(resultadoNaoAssinado, resultadoStrNaoAssinado);
+  char resultadoStrTrocado[33];
+  intParaString(resultadotrocado, resultadoStrTrocado);
+  
+  int len = 0;
+  while (resultadoStr[len] != '\n') len++; 
+  len++;
+  int lenTrocado = 0;
+  while (resultadoStrTrocado[lenTrocado] != '\n') lenTrocado++; 
+  lenTrocado++;
+  int lenNaoAssinado = 0;
+  while (resultadoStrNaoAssinado[lenNaoAssinado] != '\n') lenNaoAssinado++; 
+  lenNaoAssinado++;
+  int lenhexa=0;
+  while (hexa[lenhexa] != '\n') lenhexa++;
+  lenhexa++;
+  int lenoctal=0;
+  while (octal[lenoctal] != '\n') lenoctal++;
+  lenoctal++;
+  int lenbitrocado=0;
+  while (bitrocado[lenbitrocado] != '\n') lenbitrocado++;
+  lenbitrocado++;
+  int lenhexatrocado=0;
+  while (hexatrocado[lenhexatrocado] != '\n') lenhexatrocado++;
+  lenhexatrocado++;
+  int lenoctaltrocado=0;
+  while(lenoctaltrocado != '\n') lenoctaltrocado++;
+  lenoctaltrocado++;
+
+  
+  write(STDOUT_FD, resultadoStr, len);
+  write(STDOUT_FD, resultadoStrNaoAssinado, lenNaoAssinado);
+  write(STDOUT_FD, hexa, lenhexa);
+  write(STDOUT_FD, octal, lenoctal);
+  write(STDOUT_FD, bitrocado, lenbitrocado);
+  write(STDOUT_FD, resultadoStrTrocado, lenTrocado);
+  write(STDOUT_FD, hexatrocado, lenhexatrocado);
+  write(STDOUT_FD, octaltrocado, lenoctaltrocado);
   return 0;
 }
