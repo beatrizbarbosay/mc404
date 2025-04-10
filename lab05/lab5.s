@@ -9,7 +9,7 @@ _start:
 
 main:
     jal read //o input agora esta em "input adress"
-    la t0, input_adress
+    la t0, input_address
     lb t1, 1(t0) //pega os numeros nos bits da entrada
     lb t2, 2(t0)
     lb t4, 4(t0)

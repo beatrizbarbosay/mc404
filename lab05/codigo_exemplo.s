@@ -9,7 +9,7 @@ _start:
     # Lê a entrada
     li a0, 0           # file descriptor = 0 (stdin)
     la a1, input       # buffer
-    li a2, 2           # size
+    li a2, 2          # size
     li a7, 63          # syscall read (63)
     ecall
 
