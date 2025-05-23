@@ -114,8 +114,8 @@ write:
     ecall
     ret
 
-
-
 .bss
 input_address: .skip 0x18  # buffer
 result: .skip 0x4
+
+0x112b4
