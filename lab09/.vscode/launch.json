@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/beatrizbarbosay/mc404/lab09",
+      "program": "/Users/beatrizbarbosay/mc404/lab09/build/Debug/outDebug"
+    }
+  ]
+}
